@@ -21,7 +21,7 @@ function App() {
         </span>
       </div>
       <Routes>
-        <Route path="/shoppingList" Component={ShoppingList} />
+        <Route path="/" Component={ShoppingList} />
       </Routes>
     </div>
   );

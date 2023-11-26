@@ -3,6 +3,7 @@
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
   min-height: 100vh;
+  font-size: 18px;
 }
 
 .App-logo {
@@ -53,4 +54,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+h2{
+  font-size: 24px;
+}
+p,li{
+  font-size: 18px;
 }
