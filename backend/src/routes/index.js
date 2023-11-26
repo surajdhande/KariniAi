@@ -4,15 +4,25 @@ const ShopifyModel = require("../model/index");
 
 router.get("/getData", async (req, res) => {
   try {
-    const { fetchSize, pageNo } = req.query;
+    const { fetchSize, pageNo, search } = req.query;
 
     const size = parseInt(fetchSize, 10) || 10;
     const page = parseInt(pageNo, 10) || 1;
-
     const skip = (page - 1) * size;
 
-    const data = await ShopifyModel.find().skip(skip).limit(size);
-    const totalRecords = await ShopifyModel.countDocuments();
+    let query = {}; 
+
+    if (search) {
+      query = {
+        $or: [
+          { Title: { $regex: new RegExp(search, "i") } }, 
+          { "Variant SKU": { $regex: new RegExp(search, "i") } }, 
+        ],
+      };
+    }
+
+    const data = await ShopifyModel.find(query).skip(skip).limit(size);
+    const totalRecords = await ShopifyModel.countDocuments(query);
 
     res.json({ data, totalRecords });
   } catch (e) {
@@ -23,11 +33,10 @@ router.get("/getData", async (req, res) => {
 router.put("/updateCart", async (req, res) => {
   try {
     const { id, cartStatus } = req.query;
-    
-    const updateCart = await ShopifyModel.findByIdAndUpdate(
-      id ,
-      { isAddedToCart: cartStatus }
-    );
+
+    const updateCart = await ShopifyModel.findByIdAndUpdate(id, {
+      isAddedToCart: cartStatus,
+    });
 
     console.log("Cart updated:", id, cartStatus, updateCart);
 
